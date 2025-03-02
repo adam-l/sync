@@ -9,15 +9,19 @@ sync_interval: int = 0
 source_path: str = ''
 destination_path: str = ''
 
-logging.basicConfig(
-  level=logging.DEBUG,
-  format='%(asctime)s.%(msecs)03d - %(message)s',
-  datefmt='%Y-%m-%d %H:%M:%S',
-  handlers=[
-    logging.StreamHandler(),
-    logging.FileHandler('sync_log.txt', mode='a')
-  ]
-)
+def set_logging() -> None:
+  SYNC_LOG_FILENAME: str = 'sync_log.txt'
+  if os.path.isfile(SYNC_LOG_FILENAME):
+    os.remove(SYNC_LOG_FILENAME)
+  logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s.%(msecs)03d - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S',
+    handlers=[
+      logging.StreamHandler(),
+      logging.FileHandler(SYNC_LOG_FILENAME, mode='a')
+    ]
+  )
 
 def get_md5_for_file(file_path: str) -> str:
   md5_hash = hashlib.md5()
@@ -95,6 +99,7 @@ def init() -> None:
   source_path = get_folder_name('Provide source folder name: ')
   global destination_path
   destination_path = get_folder_name('Provide destination folder name: ')
+  set_logging()
   read_interval()
   sync()
 
