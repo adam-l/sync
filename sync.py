@@ -55,25 +55,15 @@ def is_md5_valid() -> bool:
 def get_current_time() -> str:
   return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-def read_source() -> None:
-  global source_path
-  source_path = input('Provide source folder name: ')
-  if not isinstance(source_path, str) or len(source_path.strip()) == 0:
-    print('❌ Please provide a valid source folder name')
-    read_source()
-  if not os.path.isdir(source_path):
-    print(f'❌ Folder "{source_path}" does not exist')
-    read_source()
-
-def read_destination() -> None:
-  global destination_path
-  destination_path = input('Provide destination folder name: ')
-  if not isinstance(destination_path, str) or len(destination_path.strip()) == 0:
-    print('❌ Please provide a valid destination folder name')
-    read_source()
-  if not os.path.isdir(source_path):
-    print(f'❌ Folder "{source_path}" does not exist')
-    read_source()
+def get_folder_name(output_message: str) -> str:
+  folder_name = input(output_message)
+  if not isinstance(folder_name, str) or len(folder_name.strip()) == 0:
+    print('❌ Please provide a valid folder name')
+    return get_folder_name(output_message)
+  if not os.path.isdir(folder_name):
+    print(f'❌ Folder "{folder_name}" does not exist')
+    return get_folder_name(output_message)
+  return folder_name
 
 def read_interval() -> None:
   global sync_interval
@@ -99,7 +89,12 @@ def clean() -> None:
   shutil.rmtree(destination_path)
   logging.info(f'    ✅ Old files removed from "{destination_path}" folder ')
 
-read_source()
-read_destination()
-read_interval()
-sync()
+def init() -> None:
+  global source_path
+  source_path = get_folder_name('Provide source folder name: ')
+  global destination_path
+  destination_path = get_folder_name('Provide destination folder name: ')
+  read_interval()
+  sync()
+
+init()
