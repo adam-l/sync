@@ -27,7 +27,7 @@ def get_md5_for_file(file_path: str) -> str:
   return md5_hash.hexdigest()
     
 def is_md5_valid() -> bool:
-  logging.info(f'    ⚙️  Running MD5 validation...')
+  logging.info(f'  ⚙️ Running MD5 validation...')
   is_md5_validation_successful = True
 
   for dirpath, dirnames, filenames in os.walk(source_path):
@@ -36,20 +36,20 @@ def is_md5_valid() -> bool:
       destination_file_path = os.path.join(destination_path, os.path.relpath(source_file_path, source_path))
         
       if not os.path.exists(destination_file_path):
-        logging.warning(f'        ❌ File not found: {destination_file_path}')
+        logging.error(f'    ❌ File not found: {destination_file_path}')
         is_md5_validation_successful = False
         continue
 
-      logging.info(f'        ⚙️  Veryfying MD5 for file: {destination_file_path}')
+      logging.info(f'    ⚙️ Veryfying MD5 for file: {destination_file_path}')
 
       source_md5: str = get_md5_for_file(source_file_path)
       destination_md5: str = get_md5_for_file(destination_file_path)
 
       if (source_md5 != destination_md5):
-        logging.error(f'            ❌ MD5 validation failed: {source_file_path} - {source_md5}, {destination_file_path} - {destination_md5}')
+        logging.error(f'      ❌ MD5 validation failed: {source_file_path} - {source_md5}, {destination_file_path} - {destination_md5}')
         is_md5_validation_successful = False
       else:
-        logging.error(f'            ✅ MD5 validation for file "{destination_file_path}" was successful')
+        logging.info(f'      ✅ MD5 validation for file "{destination_file_path}" was successful')
   return is_md5_validation_successful
 
 def get_current_time() -> str:
@@ -84,7 +84,7 @@ def read_interval() -> None:
 def sync() -> None:
   logging.info(f'🔄 Synchronising initiated')
   clean()
-  logging.info(f'    ⚙️  Copying files from "{source_path}" to "{destination_path}"...')
+  logging.info(f'    ⚙️ Copying files from "{source_path}" to "{destination_path}"...')
   shutil.copytree(source_path, destination_path)
   if is_md5_valid():
     logging.info('✅ Synchronisation successful')
@@ -95,9 +95,9 @@ def sync() -> None:
 def clean() -> None:
   if not os.path.exists(destination_path):
     return
-  logging.info(f'    ⚙️  Removing old files from "{destination_path}" folder...')
+  logging.info(f'  ⚙️ Removing old files from "{destination_path}" folder...')
   shutil.rmtree(destination_path)
-  logging.info(f'        ✅ Old files removed from "{destination_path}" folder ')
+  logging.info(f'    ✅ Old files removed from "{destination_path}" folder ')
 
 read_source()
 read_destination()
