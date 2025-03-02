@@ -69,7 +69,8 @@ def read_interval() -> None:
   global sync_interval
   sync_interval = int(input('Provide time interval for synchronisation in seconds: '))
   if sync_interval <= 0:
-    raise ValueError('❌ The value must be greater than 0')
+    print(f'❌ The value must be greater than 0')
+    read_interval()
 
 def sync() -> None:
   logging.info(f'🔄 Synchronising initiated')
